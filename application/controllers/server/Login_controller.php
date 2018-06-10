@@ -1,6 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-
 /**
 * 	登录页面
 */
@@ -11,12 +10,12 @@ class Login_controller extends CI_Controller
 	*	加载登录/注册界面视图
 	*/
 
-	public function index($page = "login"){
+	public function index($page = "register"){
 			
-		if ( ! file_exists(APPPATH.'views/web/'.$page.'.html'))
+		if ( ! file_exists(APPPATH.'views/web/'.$page.'.php'))
         	show_404();
 
-   	 	$page=ucfirst($page).'.html';
+   	 	$page=ucfirst($page).'.php';
 
    	 	$this->load->view("web/".$page);
 	
@@ -87,14 +86,19 @@ class Login_controller extends CI_Controller
 		$username=trim($this->input->post('username'));
 		$pwd=trim($this->input->post('pwd')); 
 		$pwd2=trim($this->input->post('pwd2'));
-		//$captcha=trim($this->input->post('captcha'));
-
-		if(!empty($username) && !empty($pwd) && !empty($pwd2) ){
+		$captcha=trim($this->input->post('captcha'));
+		//var_dump($captcha);
+		if(!empty($username) && !empty($pwd) && !empty($pwd2) && !empty($captcha)){
 			if($pwd2 != $pwd){
 				$error_code=1004;
 				$data=array();
 				$error_message="两次输入密码不一致";
 			}
+			//	elseif($captcha !=$_SESSION['captcha']){
+			// 	$error_code=1008;
+			// 	$data=array();
+			// 	$error_message="验证码输入不正确";
+			// }
 			else{
 
 				$sql="select uid from user where username = ? ";
@@ -138,6 +142,9 @@ class Login_controller extends CI_Controller
 		echo json_encode($json);
 	}
 
+	/**
+	*	查询某用户是否存在
+	*/
 
 	protected function check($sql,$where){
 
@@ -160,53 +167,55 @@ class Login_controller extends CI_Controller
 		return $result;
 	}
 
-	
 
 
 
-/**
- 	private function captcha(){
- 		$this->load->helper('captcha');		//验证码辅助函数
-		$this->load->library('session');	//载入session验证类
 
-		//设置验证码的内容
-		$speed="0123456789";
-		$word='';
-		for($i=0;$i<4;$i++){
-			$word .=$speed[mt_rand(0,strlen($speed)-1)];
-		}
+	/**
+	*	验证码
+	*/
+ 	// private function captcha(){
 
-		//配置项
-		$vals=array(
-			'word' => $word,
-			'img_path'=>'./captcha/',		//验证码保存路径
-			'img_url'=> base_url().'captcha/',		//验证码图片URL
-			//'font_path'=>'',		//验证码上字体
-			'img_width'=>150,		//验证码图片宽度
-			'img_height'=>50,		//验证码图片高度
-			'expiration'=> 120 ,		//验证码图片删除时间
-			'word_length'=> 7,		//验证码长度
-			'font_size'=>25 ,			//验证码字体大小
-			'img_id'=>'image_id' ,			//将会设置为图片验证码的ID   ？？
-			'pool' => '0123456789zxcvbnmasdfghjklqwertyuiopZXCVBNMASDFGHJKLQWERTYUIOP',		// ？？
-			'colors'=>array(
-				'background'=>array(250,255,200),	//图片背景颜色
-				'border'=>array(120,120,120),	//边框颜色
-				'text'=>array(0,0,0),	//字颜色
-				'grid'=>array(123,120,120)		// ??
-				)
-			);
+ 	// 	$this->load->helper('captcha');		//验证码辅助函数
 
-		//生成验证码  返回一个数组
-		$cap = create_captcha($vals);
-		// echo $cap['image'];
+		// //设置验证码的内容
+		// $speed="0123456789";
+		// $word='';
+		// for($i=0;$i<4;$i++){
+		// 	$word .=$speed[mt_rand(0,strlen($speed)-1)];
+		// }
 
-		$data['captcha']=$cap['image'];
+		// //配置项
+		// $vals=array(
+		// 	'word' => $word,
+		// 	'img_path'=>'./captcha/',		//验证码保存路径
+		// 	'img_url'=> base_url().'captcha/',		//验证码图片URL
+		// 	//'font_path'=>'',		//验证码上字体
+		// 	'img_width'=>150,		//验证码图片宽度
+		// 	'img_height'=>50,		//验证码图片高度
+		// 	'expiration'=> 120 ,		//验证码图片删除时间
+		// 	'word_length'=> 7,		//验证码长度
+		// 	'font_size'=>25 ,			//验证码字体大小
+		// 	'img_id'=>'image_id' ,			//将会设置为图片验证码的ID   ？？
+		// 	'pool' => '0123456789zxcvbnmasdfghjklqwertyuiopZXCVBNMASDFGHJKLQWERTYUIOP',		// ？？
+		// 	'colors'=>array(
+		// 		'background'=>array(250,255,200),	//图片背景颜色
+		// 		'border'=>array(120,120,120),	//边框颜色
+		// 		'text'=>array(0,0,0),	//字颜色
+		// 		'grid'=>array(123,120,120)		// ??
+		// 		)
+		// 	);
 
-		//验证码设为session
-		$_SESSION['captcha']=strtoupper( $cap['word'] );
- 	}
-*/
+		// //生成验证码  返回一个数组
+		// $cap = create_captcha($vals);
+		// // echo $cap['image'];
+
+		// $data['captcha']=$cap['image'];
+
+		// //验证码设为session
+		// $_SESSION['captcha']=strtoupper( $cap['word'] );
+ 	//}
+
 
 
 
