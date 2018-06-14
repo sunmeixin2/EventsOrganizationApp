@@ -8,7 +8,7 @@ class User_model extends CI_Model
 	
 	public function select($sql,$data){
 
-		$result = $this->db->query($sql,$data)->result_array();  
+		$result = $this->db->query($sql,$data)->result_array();
 		return $result;
 	}
 
