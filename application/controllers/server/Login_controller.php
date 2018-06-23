@@ -10,8 +10,8 @@ class Login_controller extends CI_Controller
 	*	加载登录/注册界面视图
 	*/
 
-	public function index($page = "register"){
-			
+	public function index($page = "login"){
+		
 		if ( ! file_exists(APPPATH.'views/web/'.$page.'.php'))
         	show_404();
 
@@ -29,19 +29,21 @@ class Login_controller extends CI_Controller
 	
 		$username=trim($this->input->post('username'));
 		$pwd=trim($this->input->post('pwd')); 
-
+		
 		//根据用户名查询用户信息
 		if(!empty($username) && !empty($pwd)){
+			
 
 			$sql="select uid,pwd,groupid from user where username = ?";
 			$where=array('username'=>$username);
 			$user_info_one=$this->check($sql,$where);
-		
-			// var_dump($user_info_one);
+			
+			 var_dump($user_info_one);
+			 exit();
 			//判断用户是否存在或密码是否正确
 			if(!empty($user_info_one)){
 
-				if($pwd == $user_info_one[0]['pwd']){
+				if($pwd == $user_info_one[0]['pwd']){		//密码md5()加密
 					
 					//设置session
 					$_SESSION['uid']=$user_info_one[0]['uid'];
@@ -55,6 +57,8 @@ class Login_controller extends CI_Controller
 						'username'=>$username
 					);
 					$error_message="";		
+
+					//$this->load->view('web/index.php');
 				}else{
 					$error_code=1001;
 					$data=array();
@@ -110,6 +114,7 @@ class Login_controller extends CI_Controller
 				$result=$this->check($sql,$where);
 
 				if(empty($result)){		//用户未被注册
+
 					$info=array(
 						'username'=>$username,
 						'pwd' =>$pwd,
@@ -155,6 +160,13 @@ class Login_controller extends CI_Controller
 
 		return $result;
 	}
+
+	/**
+		** 打包json信息
+		* $error_code     错误状态码
+		* $data  	      数据
+		* $error_message  错误信息解释
+	*/
 	protected function json($error_code,$data,$error_message){
 		if($error_code!=0){
 			$result=array(
