@@ -145,6 +145,7 @@ class Login_controller extends CI_Controller
 			$data=array();
 			$error_message="信息不能为空";
 		}
+		
 		$json = $this->json($error_code,$data,$error_message);
 		echo json_encode($json);
 	}

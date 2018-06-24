@@ -10,10 +10,10 @@
 		password：<input type="password" name="pwd">
 		<br>
 		重复：
-		<input type="password" name="pwd2">
-		<br>
+		<input type="password" name="pwd2"> -->
+		 <br>
 		 <p>验 证 码：<input type="text" name="captcha" id="yzm">
- 		<img src="<?php echo site_url('server/login_controller/captcha')?>" onClick="this.src='<?php echo site_url('server/login_controller/captcha')?>?nocache='+Math.random()" style="cursor:hand"></p>
+ 		<img src="<?php echo site_url('server/login_controller/captcha')?>" onClick="this.src='<?php echo site_url('server/login_controller/captcha')?>?nocache='+Math.random()" style="cursor:hand"></p> 
 		<input type="submit" value="登录" >
 	</form>
 
